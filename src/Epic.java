@@ -41,27 +41,9 @@ public class Epic extends Task {
             }
         }
     }
-    // Не существует такого списка с n - элементами, для которого обращения к ним происходило более n раз
-   /* private boolean hasSubtasksSameStatus(TaskStatus taskStatus) {
-        if (subtasks.isEmpty()) {
-            return false;
-        }
-        for (Subtask subtask : subtasks) {
-            if (subtask.getStatus() != taskStatus) {
-                return false;
-            }
-        }
-        return true;
-    }*/
 
     List<Subtask> getSubtasks() {
         return subtasks;
-    }
-
-    public void removeSubtask(Subtask subtask) {
-        if (subtasks.remove(subtask)) {
-            refreshStatus();
-        }
     }
 
     @Override

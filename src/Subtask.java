@@ -1,16 +1,15 @@
 public class Subtask extends Task {
 
-    private final Epic epic; // Для каждой подзадачи известно, в рамках какого эпика она выполняется
 
-    Subtask(String name, String description, Epic epic) {
-        super(name, description);
-        this.epic = epic;
+    private final int epicId; // Для каждой подзадачи известно, в рамках какого эпика она выполняется
+
+    Subtask(String name, String description, int epicId, TaskStatus taskStatus) {
+        super(name, description, taskStatus);
+        this.epicId = epicId;
     }
 
-    @Override
-    protected void setStatus(TaskStatus taskStatus) {
-        super.setStatus(taskStatus);
-        epic.refreshStatus();
+    public int getEpicId() {
+        return epicId;
     }
 
     @Override
@@ -20,7 +19,7 @@ public class Subtask extends Task {
                 ", name='" + getName() + '\'' +
                 ", description='" + getDescription() + '\'' +
                 ", status=" + getStatus() +
-                ", epicId=" + epic.getId() +
+                ", epicId=" + epicId +
                 '}';
     }
 }

@@ -4,27 +4,22 @@ import java.util.Objects;
     Задача
  */
 public class Task {
-
-    private static int nextId; // числовое поле-счётчик для генерации идентификаторов
-
-    private final int id; // Уникальный идентификационный номер задачи, по которому её можно будет найти
-    private final String name; // Название, кратко описывающее суть задачи (например, «Переезд»)
-    private final String description; // Описание, в котором раскрываются детали
+    private int id; // Уникальный идентификационный номер задачи, по которому её можно будет найти
+    private String name; // Название, кратко описывающее суть задачи (например, «Переезд»)
+    private String description; // Описание, в котором раскрываются детали
     private TaskStatus status; // Статус, отображающий её прогресс
 
-    public Task(String name, String description) {
-        this.id = getNextId();
+    public Task(String name, String description, TaskStatus taskStatus) {
         this.name = name;
         this.description = description;
-        this.status = TaskStatus.NEW;
+        this.status = taskStatus;
     }
-
+    public void setId(int id) {
+        this.id = id;
+    }
     /*
             Генерирует новый Id
          */
-    private static int getNextId() {
-        return nextId++;
-    }
 
     public int getId() {
         return id;
@@ -44,6 +39,14 @@ public class Task {
 
     public String getDescription() {
         return description;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override

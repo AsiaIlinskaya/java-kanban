@@ -26,24 +26,40 @@ public class Epic extends Task {
                 case NEW:
                     countNew++;
             }
-            int countSubtasks = subtasks.size();
-            if (countSubtasks == 0) {
-                setStatus(TaskStatus.NEW);
-            }
-            else if (countSubtasks == countDone) {
-                setStatus(TaskStatus.DONE);
-            }
-            else if (countSubtasks == countNew) {
-                setStatus(TaskStatus.NEW);
-            }
-            else {
-                setStatus(TaskStatus.IN_PROGRESS);
-            }
+        }
+
+        int countSubtasks = subtasks.size();
+        if (countSubtasks == 0) {
+            setStatus(TaskStatus.NEW);
+        }
+        else if (countSubtasks == countDone) {
+            setStatus(TaskStatus.DONE);
+        }
+        else if (countSubtasks == countNew) {
+            setStatus(TaskStatus.NEW);
+        }
+        else {
+            setStatus(TaskStatus.IN_PROGRESS);
         }
     }
 
     List<Subtask> getSubtasks() {
         return subtasks;
+    }
+
+    public void removeSubtask(Subtask subtask) {
+        if (subtasks.remove(subtask)) {
+            refreshStatus();
+        }
+    }
+
+    public void clearSubtasks() {
+        subtasks.clear();
+        refreshStatus();
+    }
+    public void addSubtask (Subtask subtask) {
+        subtasks.add(subtask);
+        refreshStatus();
     }
 
     @Override

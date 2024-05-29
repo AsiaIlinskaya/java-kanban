@@ -17,9 +17,6 @@ public class Task {
     public void setId(int id) {
         this.id = id;
     }
-    /*
-            Генерирует новый Id
-         */
 
     public int getId() {
         return id;

@@ -7,7 +7,7 @@ public class Managers {
         if (defaultTaskManager == null) {
             defaultTaskManager = new InMemoryTaskManager();
         }
-        return new InMemoryTaskManager();
+        return defaultTaskManager;
     }
 
     public static HistoryManager getDefaultHistory() {

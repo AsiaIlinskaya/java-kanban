@@ -1,10 +1,14 @@
+package TaskTest;
+
+import Model.Subtask;
+import Model.TaskStatus;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class SubtaskTest {
 
-    // проверьте, что наследники класса Task равны друг другу, если равен их id;
+    // проверьте, что наследники класса Task.Task равны друг другу, если равен их id;
     @Test
     public void subtaskEqualsSameId() {
         Subtask subtask1 = new Subtask("name1", "desc1", 14, TaskStatus.NEW);

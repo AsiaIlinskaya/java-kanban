@@ -1,3 +1,9 @@
+package ServiceTest;
+
+import Model.TaskStatus;
+import Service.HistoryManager;
+import Service.InMemoryHistoryManager;
+import Model.Task;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

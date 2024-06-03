@@ -1,3 +1,12 @@
+package ServiceTest;
+
+import Model.Subtask;
+import Service.InMemoryTaskManager;
+import Service.Managers;
+import Service.TaskManager;
+import Model.Epic;
+import Model.Task;
+import Model.TaskStatus;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +27,7 @@ class InMemoryTaskManagerTest {
         Managers.getDefaultHistory().getHistory().clear();
     }
 
-    // проверьте, что InMemoryTaskManager действительно добавляет задачи разного типа и может найти их по id;
+    // проверьте, что Service.InMemoryTaskManager действительно добавляет задачи разного типа и может найти их по id;
 
     @Test
     void putAndGetTask() {
@@ -49,8 +58,8 @@ class InMemoryTaskManagerTest {
     // создайте тест, в котором проверяется неизменность задачи (по всем полям) при добавлении задачи в менеджер
     @Test
     void taskMutability() {
-        String name = "Task Name";
-        String descr = "Task description";
+        String name = "Task.Task Name";
+        String descr = "Task.Task description";
         TaskStatus taskStatus = TaskStatus.NEW;
         Task task = new Task(name, descr, taskStatus);
         taskManager.putTask(task);
@@ -59,11 +68,11 @@ class InMemoryTaskManagerTest {
         assertEquals(taskStatus, task.getStatus());
     }
 
-    // убедитесь, что задачи, добавляемые в HistoryManager, сохраняют предыдущую версию задачи и её данных.
+    // убедитесь, что задачи, добавляемые в Service.HistoryManager, сохраняют предыдущую версию задачи и её данных.
     @Test
     void taskHistoryMutability() {
-        String name = "Task Name";
-        String descr = "Task description";
+        String name = "Task.Task Name";
+        String descr = "Task.Task description";
         TaskStatus taskStatus = TaskStatus.NEW;
         Task task = new Task(name, descr, taskStatus);
         taskManager.putTask(task);

@@ -1,10 +1,13 @@
+package TaskTest;
+
+import Model.Epic;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class EpicTest {
 
-    // проверьте, что наследники класса Task равны друг другу, если равен их id;
+    // проверьте, что наследники класса Task.Task равны друг другу, если равен их id;
     @Test
     void epicEqualsSameId() {
         Epic epic1 = new Epic("name1", "desc1");

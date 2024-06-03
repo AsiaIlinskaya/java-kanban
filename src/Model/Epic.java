@@ -1,9 +1,11 @@
+package Model;
+
 import java.util.LinkedList;
 import java.util.List;
 
 public class Epic extends Task {
 
-    private final List<Subtask> subtasks; // Каждый эпик знает, какие подзадачи в него входят
+    private final List<Subtask> subtasks;// Каждый эпик знает, какие подзадачи в него входят
 
     public Epic(String name, String description) {
         super(name, description, TaskStatus.NEW);
@@ -14,7 +16,7 @@ public class Epic extends Task {
             Метод для перерасчета статуса.
             Завершение всех подзадач эпика считается завершением эпика.
          */
-    void refreshStatus() {
+    public void refreshStatus() {
         int countDone = 0;
         int countNew = 0;
 
@@ -43,7 +45,7 @@ public class Epic extends Task {
         }
     }
 
-    List<Subtask> getSubtasks() {
+    public List<Subtask> getSubtasks() {
         return subtasks;
     }
 
@@ -64,7 +66,7 @@ public class Epic extends Task {
 
     @Override
     public String toString() {
-        return "Epic{" +
+        return "Task.Epic{" +
                 "id=" + getId() +
                 ", name='" + getName() + '\'' +
                 ", description='" + getDescription() + '\'' +

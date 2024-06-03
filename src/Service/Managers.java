@@ -1,3 +1,5 @@
+package Service;
+
 public class Managers {
 
     private static HistoryManager defaultHistoryManager;

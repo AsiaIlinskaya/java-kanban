@@ -1,3 +1,8 @@
+package ServiceTest;
+
+import Service.HistoryManager;
+import Service.Managers;
+import Service.TaskManager;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

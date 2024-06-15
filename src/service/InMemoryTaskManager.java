@@ -23,6 +23,7 @@ public class InMemoryTaskManager implements TaskManager {
         subtasks = new HashMap<>();
         history = Managers.getDefaultHistory();
     }
+
     /*
             Получение списка всех задач типа Задача
          */
@@ -179,7 +180,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void removeSubtask(int id) {
         Subtask subtask = subtasks.get(id);
-        if (subtask != null ) {
+        if (subtask != null) {
             int epicId = subtask.getEpicId();
             Epic epic = epics.get(epicId);
             epic.removeSubtask(subtask);
@@ -234,11 +235,10 @@ public class InMemoryTaskManager implements TaskManager {
         Получение списка всех подзадач определённого эпика.
      */
     @Override
-    public List<Subtask> getSubtasks(int id){
+    public List<Subtask> getSubtasks(int id) {
         if (epics.containsKey(id)) {
             return epics.get(id).getSubtasks();
-        }
-        else {
+        } else {
             return new ArrayList<>();
         }
     }
@@ -255,7 +255,7 @@ public class InMemoryTaskManager implements TaskManager {
     /*
      * Для удаления истории по списку идентификаторов
      */
-    private void removeAllHistory (Set<Integer> idSet) {
+    private void removeAllHistory(Set<Integer> idSet) {
         for (Integer id : idSet) {
             history.remove(id);
         }

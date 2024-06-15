@@ -7,6 +7,7 @@ import Model.Task;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 public class InMemoryTaskManager implements TaskManager {
 
@@ -51,6 +52,7 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public void removeAllTasks() {
+        removeAllHistory(tasks.keySet());
         tasks.clear();
     }
 
@@ -59,8 +61,12 @@ public class InMemoryTaskManager implements TaskManager {
     */
     @Override
     public void removeAllEpics() {
+        removeAllHistory(epics.keySet());
+        removeAllHistory(subtasks.keySet());
+
         epics.clear();
         subtasks.clear();
+
     }
 
     /*
@@ -71,6 +77,7 @@ public class InMemoryTaskManager implements TaskManager {
         for (Epic epic : epics.values()) {
             epic.clearSubtasks();
         }
+        removeAllHistory(subtasks.keySet());
         subtasks.clear();
     }
 
@@ -146,7 +153,9 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public void removeTask(int id) {
+        history.remove(id);
         tasks.remove(id);
+
     }
 
     /*
@@ -154,10 +163,14 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public void removeEpic(int id) {
+
         for (Subtask subtask : epics.get(id).getSubtasks()) {
             subtasks.remove(subtask.getId());
+            history.remove(subtask.getId());
         }
         epics.remove(id);
+        history.remove(id);
+
     }
 
     /*
@@ -171,6 +184,7 @@ public class InMemoryTaskManager implements TaskManager {
             Epic epic = epics.get(epicId);
             epic.removeSubtask(subtask);
             subtasks.remove(id);
+            history.remove(id);
         }
     }
 
@@ -236,6 +250,15 @@ public class InMemoryTaskManager implements TaskManager {
 
     private int getNextId() {
         return nextId++;
+    }
+
+    /*
+     * Для удаления истории по списку идентификаторов
+     */
+    private void removeAllHistory (Set<Integer> idSet) {
+        for (Integer id : idSet) {
+            history.remove(id);
+        }
     }
 
 }

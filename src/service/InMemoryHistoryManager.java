@@ -74,7 +74,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         return tasks;
     }
 
-    private void removeNode (Node<Task> node) {
+    private void removeNode(Node<Task> node) {
         Node<Task> nextNode = node.getNext();
         Node<Task> prevNode = node.getPrev();
         if (nextNode != null) {

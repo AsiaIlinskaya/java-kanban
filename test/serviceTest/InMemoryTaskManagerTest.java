@@ -1,12 +1,12 @@
-package ServiceTest;
+package serviceTest;
 
-import Model.Subtask;
-import Service.InMemoryTaskManager;
-import Service.Managers;
-import Service.TaskManager;
-import Model.Epic;
-import Model.Task;
-import Model.TaskStatus;
+import model.Subtask;
+import service.InMemoryTaskManager;
+import service.Managers;
+import service.TaskManager;
+import model.Epic;
+import model.Task;
+import model.TaskStatus;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

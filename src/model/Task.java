@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 import java.util.Objects;
 
@@ -16,6 +16,7 @@ public class Task {
         this.description = description;
         this.status = taskStatus;
     }
+
     public void setId(int id) {
         this.id = id;
     }

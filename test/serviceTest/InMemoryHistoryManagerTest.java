@@ -147,6 +147,18 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
+    void removeAlone() {
+        HistoryManager historyManager = new InMemoryHistoryManager();
+        historyManager.add(task);
+        List<Task> history = historyManager.getHistory();
+        assertEquals(1, history.size());
+        assertEquals(task, history.get(0));
+        historyManager.remove(1);
+        history = historyManager.getHistory();
+        assertEquals(0, history.size());
+    }
+
+    @Test
     void clear() {
         history3item.clear();
         final List<Task> history = history3item.getHistory();

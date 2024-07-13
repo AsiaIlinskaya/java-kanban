@@ -1,7 +1,7 @@
-package TaskTest;
+package taskTest;
 
-import Model.Subtask;
-import Model.TaskStatus;
+import model.Subtask;
+import model.TaskStatus;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

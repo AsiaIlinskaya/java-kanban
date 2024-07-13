@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -33,14 +33,11 @@ public class Epic extends Task {
         int countSubtasks = subtasks.size();
         if (countSubtasks == 0) {
             setStatus(TaskStatus.NEW);
-        }
-        else if (countSubtasks == countDone) {
+        } else if (countSubtasks == countDone) {
             setStatus(TaskStatus.DONE);
-        }
-        else if (countSubtasks == countNew) {
+        } else if (countSubtasks == countNew) {
             setStatus(TaskStatus.NEW);
-        }
-        else {
+        } else {
             setStatus(TaskStatus.IN_PROGRESS);
         }
     }
@@ -59,7 +56,8 @@ public class Epic extends Task {
         subtasks.clear();
         refreshStatus();
     }
-    public void addSubtask (Subtask subtask) {
+
+    public void addSubtask(Subtask subtask) {
         subtasks.add(subtask);
         refreshStatus();
     }

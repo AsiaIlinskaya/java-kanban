@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Epic extends Task {
 
-    private final List<Subtask> subtasks;// Каждый эпик знает, какие подзадачи в него входят
+    private final List<Subtask> subtasks; // Каждый эпик знает, какие подзадачи в него входят
 
     public Epic(String name, String description) {
         super(name, description, TaskStatus.NEW);
@@ -70,5 +70,10 @@ public class Epic extends Task {
                 ", description='" + getDescription() + '\'' +
                 ", status=" + getStatus() +
                 '}';
+    }
+
+    @Override
+    public TaskType getTaskType() {
+        return TaskType.EPIC;
     }
 }

@@ -118,8 +118,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void putTask(Task task) {
         int id = getNextId();
-        task.setId(id);
-        tasks.put(id, task);
+        putTask(task, id);
     }
 
     /*
@@ -128,8 +127,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void putEpic(Epic epic) {
         int id = getNextId();
-        epic.setId(id);
-        epics.put(id, epic);
+        putEpic(epic, id);
     }
 
     /*
@@ -138,15 +136,8 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void putSubtask(Subtask subtask) {
-        int epicId = subtask.getEpicId();
-        if (epics.containsKey(epicId)) {
-            int subtaskId = getNextId();
-            subtask.setId(subtaskId);
-            subtasks.put(subtaskId, subtask);
-            Epic epic = epics.get(epicId);
-            epic.addSubtask(subtask);
-        }
-
+        int id = getNextId();
+        putSubtask(subtask, id);
     }
 
     /*
@@ -156,7 +147,6 @@ public class InMemoryTaskManager implements TaskManager {
     public void removeTask(int id) {
         history.remove(id);
         tasks.remove(id);
-
     }
 
     /*
@@ -171,7 +161,6 @@ public class InMemoryTaskManager implements TaskManager {
         }
         epics.remove(id);
         history.remove(id);
-
     }
 
     /*
@@ -248,6 +237,20 @@ public class InMemoryTaskManager implements TaskManager {
         return history.getHistory();
     }
 
+    protected void putTaskGeneral(Task task, int id) {
+        switch (task.getTaskType()) {
+            case TASK:
+                putTask(task, id);
+                break;
+            case EPIC:
+                putEpic((Epic) task, id);
+                break;
+            case SUBTASK:
+                putSubtask((Subtask) task, id);
+                break;
+        }
+    }
+
     private int getNextId() {
         return nextId++;
     }
@@ -258,6 +261,26 @@ public class InMemoryTaskManager implements TaskManager {
     private void removeAllHistory(Set<Integer> idSet) {
         for (Integer id : idSet) {
             history.remove(id);
+        }
+    }
+
+    private void putTask(Task task, int id) {
+        task.setId(id);
+        tasks.put(id, task);
+    }
+
+    private void putEpic(Epic epic, int id) {
+        epic.setId(id);
+        epics.put(id, epic);
+    }
+
+    private void putSubtask(Subtask subtask, int id) {
+        int epicId = subtask.getEpicId();
+        if (epics.containsKey(epicId)) {
+            subtask.setId(id);
+            subtasks.put(id, subtask);
+            Epic epic = epics.get(epicId);
+            epic.addSubtask(subtask);
         }
     }
 

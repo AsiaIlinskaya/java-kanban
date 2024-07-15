@@ -39,12 +39,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             int maxId = 0;
             for (String taskLine : taskLines) {
                 Task task = TaskSerializer.fromCSV(taskLine);
-                 if (task != null) {
+                if (task != null) {
                     putTaskGeneral(task, task.getId());
-                     if (task.getId() > maxId) {
-                         maxId = task.getId();
-                     }
-                 }
+                    if (task.getId() > maxId) {
+                        maxId = task.getId();
+                    }
+                }
             }
             setNextId(maxId + 1);
         } catch (IOException e) {

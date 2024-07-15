@@ -10,6 +10,7 @@ import service.FileBackedTaskManager;
 import service.TaskSerializer;
 
 import java.io.*;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -86,6 +87,15 @@ class FileBackedTaskManagerTest {
         assertEquals("Description subtask3", loadedSubtask3.getDescription());
         assertEquals(TaskStatus.NEW, loadedSubtask3.getStatus());
         assertEquals(3, loadedSubtask3.getEpicId());
+        Task task6 = new Task("Task6", "Description task6", TaskStatus.NEW);
+        manager2.putTask(task6);
+        assertEquals(6, task6.getId());
+        List<Subtask> epic1Subtasks = epic1.getSubtasks();
+        List<Subtask> epic2Subtasks = epic2.getSubtasks();
+        assertEquals(1, epic1Subtasks.size());
+        assertEquals(1, epic2Subtasks.size());
+        assertTrue(epic1Subtasks.contains(loadedSubtask2));
+        assertTrue(epic2Subtasks.contains(loadedSubtask3));
     }
 
     @Test

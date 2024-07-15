@@ -255,6 +255,10 @@ public class InMemoryTaskManager implements TaskManager {
         return nextId++;
     }
 
+    protected void setNextId(int nextId) {
+        this.nextId = nextId;
+    }
+
     /*
      * Для удаления истории по списку идентификаторов
      */

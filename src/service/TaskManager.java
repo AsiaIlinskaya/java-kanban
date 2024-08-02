@@ -5,6 +5,7 @@ import model.Subtask;
 import model.Task;
 
 import java.util.List;
+import java.util.Set;
 
 public interface TaskManager {
     /*
@@ -97,5 +98,10 @@ public interface TaskManager {
         Возвращает историю просмотров задач
      */
     List<Task> getHistory();
+
+    /*
+        Возвращает задачи, упорядоченные по времени начала
+     */
+    Set<Task> getPrioritizedTasks();
 
 }

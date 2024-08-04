@@ -332,6 +332,30 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(TaskStatus.IN_PROGRESS, epic1.getStatus());
     }
 
+    protected void epicStateTest() {
+        Epic epic1 = new Epic("n1", "d1");
+        manager.putEpic(epic1);
+        Subtask subtask1 = new Subtask("n3", "n3", epic1.getId(), TaskStatus.NEW);
+        LocalDateTime initTime = LocalDateTime.of(2024, 2, 10, 13, 0);
+        subtask1.setStartTime(initTime);
+        Duration initDuration = Duration.ofHours(1);
+        subtask1.setDuration(initDuration);
+        manager.putSubtask(subtask1);
+        assertEquals(initTime, epic1.getStartTime());
+        assertEquals(initDuration, epic1.getDuration());
+        assertEquals(TaskStatus.NEW, epic1.getStatus());
+        Subtask subtask2 = new Subtask("n4", "n4", epic1.getId(), TaskStatus.IN_PROGRESS);
+        LocalDateTime updTime = LocalDateTime.of(2024, 4, 11, 16, 20);
+        subtask2.setStartTime(updTime);
+        Duration updDuration = Duration.ofMinutes(15);
+        subtask2.setDuration(updDuration);
+        subtask2.setId(subtask1.getId());
+        manager.updateSubtask(subtask2);
+        assertEquals(updTime, epic1.getStartTime());
+        assertEquals(updDuration, epic1.getDuration());
+        assertEquals(TaskStatus.IN_PROGRESS, epic1.getStatus());
+    }
+
     protected void getSubtasksTest() {
         Epic epic1 = new Epic("n1", "d1");
         manager.putEpic(epic1);

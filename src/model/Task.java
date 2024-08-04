@@ -1,5 +1,7 @@
 package model;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /*
@@ -10,6 +12,9 @@ public class Task {
     private String name; // Название, кратко описывающее суть задачи (например, «Переезд»)
     private String description; // Описание, в котором раскрываются детали
     private TaskStatus status; // Статус, отображающий её прогресс
+    private Duration duration;
+    private LocalDateTime startTime;
+
 
     public Task(String name, String description, TaskStatus taskStatus) {
         this.name = name;
@@ -74,6 +79,30 @@ public class Task {
 
     public TaskType getTaskType() {
         return TaskType.TASK;
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        if (startTime == null || duration == null) {
+            return null;
+        } else {
+            return startTime.plus(duration);
+        }
     }
 
 }

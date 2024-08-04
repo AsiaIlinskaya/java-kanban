@@ -1,88 +1,147 @@
 package serviceTest;
 
-import model.Subtask;
+import org.junit.jupiter.api.Test;
 import service.InMemoryTaskManager;
 import service.Managers;
-import service.TaskManager;
-import model.Epic;
-import model.Task;
-import model.TaskStatus;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class InMemoryTaskManagerTest {
-
-    TaskManager taskManager;
+class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
 
     @BeforeEach
     void prepareTaskManager() {
-        taskManager = new InMemoryTaskManager();
+        setManager(new InMemoryTaskManager());
     }
 
     @AfterEach
     void cleanHistory() {
-        Managers.getDefaultHistory().getHistory().clear();
-    }
-
-    // проверьте, что Service.InMemoryTaskManager действительно добавляет задачи разного типа и может найти их по id;
-
-    @Test
-    void putAndGetTask() {
-        Task task = new Task("name", "desc", TaskStatus.NEW);
-        taskManager.putTask(task);
-        Task taskRetrieved = taskManager.getTask(task.getId());
-        assertEquals(task, taskRetrieved);
+        Managers.getDefaultHistory().clear();
     }
 
     @Test
-    void putAndGetEpic() {
-        Epic epic = new Epic("name", "desc");
-        taskManager.putEpic(epic);
-        Epic epicRetrieved = taskManager.getEpic(epic.getId());
-        assertEquals(epic, epicRetrieved);
+    @Override
+    protected void getAllTasksTest() {
+        super.getAllTasksTest();
     }
 
     @Test
-    void putAndGetSubtask() {
-        Epic epic = new Epic("name", "desc");
-        taskManager.putEpic(epic);
-        Subtask subtask = new Subtask("name", "desc", epic.getId(), TaskStatus.NEW);
-        taskManager.putSubtask(subtask);
-        Subtask subtaskRetrieved = taskManager.getSubtask(subtask.getId());
-        assertEquals(subtask, subtaskRetrieved);
+    @Override
+    protected void getAllEpicsTest() {
+        super.getAllEpicsTest();
     }
 
-    // создайте тест, в котором проверяется неизменность задачи (по всем полям) при добавлении задачи в менеджер
     @Test
-    void taskMutability() {
-        String name = "Task.Task Name";
-        String descr = "Task.Task description";
-        TaskStatus taskStatus = TaskStatus.NEW;
-        Task task = new Task(name, descr, taskStatus);
-        taskManager.putTask(task);
-        assertEquals(name, task.getName());
-        assertEquals(descr, task.getDescription());
-        assertEquals(taskStatus, task.getStatus());
+    @Override
+    protected void getAllSubtasksTest() {
+        super.getAllSubtasksTest();
     }
 
-    // убедитесь, что задачи, добавляемые в Service.HistoryManager, сохраняют предыдущую версию задачи и её данных.
     @Test
-    void taskHistoryMutability() {
-        String name = "Task.Task Name";
-        String descr = "Task.Task description";
-        TaskStatus taskStatus = TaskStatus.NEW;
-        Task task = new Task(name, descr, taskStatus);
-        taskManager.putTask(task);
-        taskManager.getTask(task.getId());
-        int histIndex = taskManager.getHistory().indexOf(task);
-        assertNotEquals(-1, histIndex);
-        Task histTask = taskManager.getHistory().get(histIndex);
-        assertEquals(name, histTask.getName());
-        assertEquals(descr, histTask.getDescription());
-        assertEquals(taskStatus, histTask.getStatus());
+    @Override
+    protected void removeAllTasksTest() {
+        super.removeAllTasksTest();
+    }
+
+    @Test
+    @Override
+    protected void removeAllEpicsTest() {
+        super.removeAllEpicsTest();
+    }
+
+    @Test
+    @Override
+    protected void removeAllSubtasksTest() {
+        super.removeAllSubtasksTest();
+    }
+
+    @Test
+    @Override
+    protected void putAndGetTaskTest() {
+        super.putAndGetTaskTest();
+    }
+
+    @Test
+    @Override
+    protected void putAndGetEpicTest() {
+        super.putAndGetEpicTest();
+    }
+
+    @Test
+    @Override
+    protected void putAndGetSubtaskTest() {
+        super.putAndGetSubtaskTest();
+    }
+
+    @Test
+    @Override
+    protected void removeTaskTest() {
+        super.removeTaskTest();
+    }
+
+    @Test
+    @Override
+    protected void removeEpicTest() {
+        super.removeEpicTest();
+    }
+
+    @Test
+    @Override
+    protected void removeSubtaskTest() {
+        super.removeSubtaskTest();
+    }
+
+    @Test
+    @Override
+    protected void updateTaskTest() {
+        super.updateTaskTest();
+    }
+
+    @Test
+    @Override
+    protected void updateEpicTest() {
+        super.updateEpicTest();
+    }
+
+    @Test
+    @Override
+    protected void updateSubtaskTest() {
+        super.updateSubtaskTest();
+    }
+
+    @Test
+    @Override
+    protected void epicStateTest() {
+        super.epicStateTest();
+    }
+
+    @Test
+    @Override
+    protected void getSubtasksTest() {
+        super.getSubtasksTest();
+    }
+
+    @Test
+    @Override
+    protected void getHistoryTest() {
+        super.getHistoryTest();
+    }
+
+    @Test
+    @Override
+    protected void taskHistoryMutabilityTest() {
+        super.taskHistoryMutabilityTest();
+    }
+
+    @Test
+    @Override
+    protected void taskMutabilityTest() {
+        super.taskMutabilityTest();
+    }
+
+    @Test
+    @Override
+    protected void taskTimeIntersectionTest() {
+        super.taskTimeIntersectionTest();
     }
 
 }

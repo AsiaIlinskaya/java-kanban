@@ -149,6 +149,9 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void removeTask(int id) {
         history.remove(id);
+        if (!tasks.containsKey(id)) {
+            throw new NotFoundException("Не существует задачи с id " + id); // TODO вынести в метод и расставить по всем попыткам получения по ID
+        }
         Task task = tasks.get(id);
         if (task.getStartTime() != null) {
             prioritizedTasks.remove(task);

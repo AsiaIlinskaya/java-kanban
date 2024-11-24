@@ -7,6 +7,9 @@ import java.io.IOException;
 
 public class HistoryHandler extends BaseHttpHandler implements HttpHandler {
 
-
+    @Override
+    protected void getHandler(HttpExchange exchange) {
+        sendObjectAsJson(exchange, getManager().getHistory());
+    }
 
 }

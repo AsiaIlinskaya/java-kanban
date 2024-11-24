@@ -3,9 +3,11 @@ package http;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import model.Task;
 import service.HistoryManager;
 import service.NotFoundException;
 import service.TaskManager;
+import service.TaskValidationException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,7 +36,10 @@ public class BaseHttpHandler implements HttpHandler {
                 default:
                     sendMethodNotAllowed(exchange);
             }
-        } catch (NotFoundException e) {
+        } catch (TaskValidationException e) {
+            sendResponse(exchange, 406, "Некорректные параметры запроса: " + e.getMessage());
+        }
+        catch (NotFoundException e) {
             sendResponse(exchange, 404, "Неизвестный идентификатор: " + e.getMessage());
         }
         catch (ENotAnId e) {
@@ -57,12 +62,52 @@ public class BaseHttpHandler implements HttpHandler {
         sendMethodNotAllowed(exchange);
     }
 
+    protected void returnDeleteResult(HttpExchange exchange) {
+        Optional<Integer> id = getId(exchange);
+        doRemove(id.orElseThrow(() -> new ENotAnId("не указан идентификатор")));
+        sendOk(exchange);
+    }
+
+    protected void doRemove(int id) {
+        throw new UnsupportedOperationException();
+    }
+
+    protected void returnTasksByIdOrAll(HttpExchange exchange) {
+        Optional<Integer> id = getId(exchange);
+        Object object  = id.isPresent() ? getTaskFromManager(id.get()) : getTasksFromManager();
+        sendObjectAsJson(exchange, object);
+    }
+
+    protected void sendObjectAsJson(HttpExchange exchange, Object obj) {
+        String json = getGson().toJson(obj);
+        sendOk(exchange, json);
+    }
+
+    protected Task getTaskFromManager(int id) {
+        throw new UnsupportedOperationException();
+    }
+
+    protected List<? extends Task> getTasksFromManager() {
+        throw new UnsupportedOperationException();
+    }
+
+    protected void returnPostResult(HttpExchange exchange) {
+        String requestBody = getRequestBody(exchange);
+        sendTasksToManager(requestBody);
+        sendOk(exchange);
+    }
+
+    protected void sendTasksToManager(String requestBody) {
+        throw new UnsupportedOperationException();
+    }
+
     protected void sendResponse(HttpExchange exchange, int code, String body) {
         try {
             sendHeaders(exchange, code);
             if (body != null) {
                 sendBody(exchange, body);
             }
+            exchange.close();
         } catch (IOException e) {
             System.out.println("Ошибка отправки http-ответа: " + e.getMessage());
         }
@@ -70,7 +115,7 @@ public class BaseHttpHandler implements HttpHandler {
 
     protected Optional<String> getPathAt(HttpExchange exchange, int position) {
         List<String> pathParts = getPathParts(exchange);
-        if (pathParts.size() < position) {
+        if (pathParts.size() <= position) {
             return Optional.empty();
         } else {
             return Optional.ofNullable(pathParts.get(position));
@@ -90,9 +135,17 @@ public class BaseHttpHandler implements HttpHandler {
         }
     }
 
-    protected String getRequestBody(HttpExchange exchange) throws IOException {
-        InputStream inputStream = exchange.getRequestBody();
-        return new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+    protected String getRequestBody(HttpExchange exchange) {
+        try {
+            InputStream inputStream = exchange.getRequestBody();
+            String requestText = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+            if (requestText.isEmpty()) {
+                throw new ERequestUnreadable("отсутствует тело запроса");
+            }
+            return requestText;
+        } catch (IOException e) {
+            throw new ERequestUnreadable("нечитаемое тело запроса - " + e.getMessage());
+        }
     }
 
     protected void sendOk(HttpExchange exchange, String text) {
@@ -128,6 +181,7 @@ public class BaseHttpHandler implements HttpHandler {
     }
 
     private void sendHeaders(HttpExchange exchange, int code) throws IOException {
+        exchange.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
         exchange.sendResponseHeaders(code, 0);
     }
 

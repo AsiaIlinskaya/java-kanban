@@ -7,6 +7,9 @@ import java.io.IOException;
 
 public class PrioritizedHandler extends BaseHttpHandler implements HttpHandler {
 
-
+    @Override
+    protected void getHandler(HttpExchange exchange) {
+        sendObjectAsJson(exchange, getManager().getPrioritizedTasks());
+    }
 
 }

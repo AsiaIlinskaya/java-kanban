@@ -4,44 +4,47 @@ import com.sun.net.httpserver.HttpExchange;
 import model.Task;
 
 import java.util.List;
-import java.util.Optional;
 
 public class TasksHandler extends BaseHttpHandler {
 
     @Override
     protected void getHandler(HttpExchange exchange) {
-        Optional<Integer> id = getId(exchange);
-        id.ifPresentOrElse(taskId -> returnTask(exchange, taskId),
-                           () -> returnTasks(exchange));
+        returnTasksByIdOrAll(exchange);
     }
 
     @Override
     protected void postHandler(HttpExchange exchange) {
-
+        returnPostResult(exchange);
     }
 
     @Override
     protected void deleteHandler(HttpExchange exchange) {
-        Optional<Integer> id = getId(exchange);
-        returnDeleteResult(exchange,
-                           id.orElseThrow(() -> new ENotAnId("не указан идентификатор")));
+        returnDeleteResult(exchange);
     }
 
-    private void returnDeleteResult(HttpExchange exchange, int id) {
+    @Override
+    protected Task getTaskFromManager(int id) {
+        return getManager().getTask(id);
+    }
+
+    @Override
+    protected List<? extends Task> getTasksFromManager() {
+        return getManager().getAllTasks();
+    }
+
+    @Override
+    protected void sendTasksToManager(String requestBody) {
+        Task task = getGson().fromJson(requestBody, Task.class);
+        if (task.getId() == 0) {
+            getManager().putTask(task);
+        } else {
+            getManager().updateTask(task);
+        }
+    }
+
+    @Override
+    protected void doRemove(int id) {
         getManager().removeTask(id);
-        sendOk(exchange);
-    }
-
-    private void returnTask(HttpExchange exchange, int id) {
-        Task task = getManager().getTask(id);
-        String json = getGson().toJson(task);
-        sendOk(exchange, json);
-    }
-
-    private void returnTasks(HttpExchange exchange) {
-        List<Task> tasks = getManager().getAllTasks();
-        String json = getGson().toJson(tasks);
-        sendOk(exchange, json);
     }
 
 }

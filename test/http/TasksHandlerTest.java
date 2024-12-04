@@ -43,7 +43,7 @@ class TasksHandlerTest {
     }
 
     @Test
-    void getHandler_all() throws IOException, InterruptedException {
+    void getHandlerAll() throws IOException, InterruptedException {
         Task task1 = new Task("Test 1", "Testing task 1", TaskStatus.NEW);
         manager.putTask(task1);
         Task task2 = new Task("Test 2", "Testing task 2", TaskStatus.NEW);
@@ -58,7 +58,7 @@ class TasksHandlerTest {
     }
 
     @Test
-    void getHandler_byID_OK() throws IOException, InterruptedException {
+    void getHandlerByIdOK() throws IOException, InterruptedException {
         Task task = new Task("Test 2", "Testing task 2", TaskStatus.NEW);
         manager.putTask(task);
         HttpResponse<String> response = HttpTestHelper.sendRequest("tasks/" + task.getId());
@@ -69,7 +69,7 @@ class TasksHandlerTest {
     }
 
     @Test
-    void getHandler_byID_NotFound() throws IOException, InterruptedException {
+    void getHandlerByIdNotFound() throws IOException, InterruptedException {
         Task task = new Task("Test 2", "Testing task 2", TaskStatus.NEW);
         manager.putTask(task);
         int id = task.getId();
@@ -78,7 +78,7 @@ class TasksHandlerTest {
     }
 
     @Test
-    void postHandler_createTask_OK() throws IOException, InterruptedException {
+    void postHandlerCreateOK() throws IOException, InterruptedException {
         Task task = new Task("Test 2", "Testing task 2", TaskStatus.NEW);
         String taskJson = gson.toJson(task);
         int httpResult = HttpTestHelper.sendRequest("tasks", taskJson);
@@ -90,7 +90,7 @@ class TasksHandlerTest {
     }
 
     @Test
-    void postHandler_createTask_Conflict() throws IOException, InterruptedException {
+    void postHandlerCreateConflict() throws IOException, InterruptedException {
         Task task = new Task("Test 1", "Testing task 1", TaskStatus.NEW);
         task.setDuration(Duration.ofHours(5));
         task.setStartTime(LocalDateTime.of(2024, 10, 9, 10, 0 ,0));
@@ -108,7 +108,7 @@ class TasksHandlerTest {
     }
 
     @Test
-    void postHandler_updateTask_OK() throws IOException, InterruptedException {
+    void postHandlerUpdateOK() throws IOException, InterruptedException {
         Task task = new Task("Test 2", "Testing task 2", TaskStatus.NEW);
         manager.putTask(task);
         Task taskUpd = new Task("Test 3", "Testing task 3", TaskStatus.NEW);
@@ -127,7 +127,7 @@ class TasksHandlerTest {
     }
 
     @Test
-    void deleteHandler_byID_OK() throws IOException, InterruptedException {
+    void deleteHandlerByIdOK() throws IOException, InterruptedException {
         Task task = new Task("Test 2", "Testing task 2", TaskStatus.NEW);
         manager.putTask(task);
         int httpCode = HttpTestHelper.delRequest("tasks/" + task.getId());
@@ -136,7 +136,7 @@ class TasksHandlerTest {
     }
 
     @Test
-    void deleteHandler_byID_NotFound() throws IOException, InterruptedException {
+    void deleteHandlerByIdNotFound() throws IOException, InterruptedException {
         Task task = new Task("Test 2", "Testing task 2", TaskStatus.NEW);
         manager.putTask(task);
         int id = task.getId();

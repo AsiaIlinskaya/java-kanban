@@ -7,7 +7,6 @@ import model.Epic;
 import model.Subtask;
 import model.Task;
 import model.TaskStatus;
-import service.HistoryManager;
 import service.Managers;
 import service.TaskManager;
 
@@ -19,9 +18,8 @@ import java.time.LocalDateTime;
 public class HttpTaskServer {
 
     private static final int PORT = 8080;
-    private static final HttpServer httpServer = initServer();
+    private static HttpServer httpServer;
     private static TaskManager taskManager;
-    private static final HistoryManager historyManager = Managers.getDefaultHistory();
     private static final Gson gson = initGson();
 
     public static void main(String[] args) {
@@ -81,10 +79,6 @@ public class HttpTaskServer {
         return taskManager;
     }
 
-    protected static HistoryManager getHistoryManager() {
-        return historyManager;
-    }
-
     protected static Gson getGson() {
         return gson;
     }
@@ -94,6 +88,7 @@ public class HttpTaskServer {
     }
 
     public void start() {
+        httpServer = initServer();
         httpServer.start();
         System.out.println("HTTP-сервер запущен на " + PORT + " порту");
     }

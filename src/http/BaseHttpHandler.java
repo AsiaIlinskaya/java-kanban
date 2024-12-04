@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import model.Task;
-import service.HistoryManager;
 import service.NotFoundException;
 import service.TaskManager;
 import service.TaskValidationException;
@@ -160,20 +159,8 @@ public class BaseHttpHandler implements HttpHandler {
         return HttpTaskServer.getTaskManager();
     }
 
-    protected HistoryManager getHistory() {
-        return HttpTaskServer.getHistoryManager();
-    }
-
     protected Gson getGson() {
         return HttpTaskServer.getGson();
-    }
-
-    protected void sendNotFound() {
-
-    }
-
-    protected void sendHasInteractions() {
-
     }
 
     private void sendMethodNotAllowed(HttpExchange exchange) {

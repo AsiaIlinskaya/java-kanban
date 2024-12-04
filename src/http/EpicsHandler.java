@@ -1,14 +1,11 @@
 package http;
 
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import model.Epic;
 import model.Subtask;
 import model.Task;
-import service.Managers;
 import service.NotFoundException;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +18,7 @@ public class EpicsHandler extends BaseHttpHandler {
             returnTasksByIdOrAll(exchange);
         } else if (pathLevel3.get().equals("subtasks")) {
             Optional<Integer> id = getId(exchange);
+            @SuppressWarnings("OptionalGetWithoutIsPresent") // есть pathLevel3, значит id на pathLevel2 тоже
             List<Subtask> subtasks = getManager().getSubtasks(id.get());
             sendObjectAsJson(exchange, subtasks);
         } else {

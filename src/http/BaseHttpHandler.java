@@ -37,14 +37,11 @@ public class BaseHttpHandler implements HttpHandler {
             }
         } catch (TaskValidationException e) {
             sendResponse(exchange, 406, "Некорректные параметры запроса: " + e.getMessage());
-        }
-        catch (NotFoundException e) {
+        } catch (NotFoundException e) {
             sendResponse(exchange, 404, "Неизвестный идентификатор: " + e.getMessage());
-        }
-        catch (ENotAnId e) {
+        } catch (ENotAnId e) {
             sendResponse(exchange, 400, "Некорректный запрос: " + e.getMessage());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             sendResponse(exchange, 500, "Непредвиденная ошибка: " + e.getMessage());
         }
     }

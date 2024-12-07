@@ -55,7 +55,7 @@ class PrioritizedHandlerTest {
         task2.setStartTime(LocalDateTime.of(2024, 6, 1, 11, 0, 0));
         manager.putTask(task3);
         String priorityJson = gson.toJson(manager.getPrioritizedTasks());
-        HttpResponse<String> httpResult = HttpTestHelper.sendRequest("prioritized");
+        HttpResponse<String> httpResult = HttpTestHelper.sendGetRequest("prioritized");
         assertEquals(200, httpResult.statusCode());
         String receivedPeiority = httpResult.body();
         assertEquals(priorityJson, receivedPeiority);

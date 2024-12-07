@@ -48,7 +48,7 @@ class TasksHandlerTest {
         manager.putTask(task1);
         Task task2 = new Task("Test 2", "Testing task 2", TaskStatus.NEW);
         manager.putTask(task2);
-        HttpResponse<String> response = HttpTestHelper.sendRequest("tasks/");
+        HttpResponse<String> response = HttpTestHelper.sendGetRequest("tasks/");
         assertEquals(200, response.statusCode());
         String jsonTasks = response.body();
         Type typeToken = new TypeToken<ArrayList<Task>>() {}.getType();
@@ -61,7 +61,7 @@ class TasksHandlerTest {
     void getHandlerByIdOK() throws IOException, InterruptedException {
         Task task = new Task("Test 2", "Testing task 2", TaskStatus.NEW);
         manager.putTask(task);
-        HttpResponse<String> response = HttpTestHelper.sendRequest("tasks/" + task.getId());
+        HttpResponse<String> response = HttpTestHelper.sendGetRequest("tasks/" + task.getId());
         assertEquals(200, response.statusCode());
         String jsonTask = response.body();
         Task receivedTask = gson.fromJson(jsonTask, Task.class);
@@ -73,7 +73,7 @@ class TasksHandlerTest {
         Task task = new Task("Test 2", "Testing task 2", TaskStatus.NEW);
         manager.putTask(task);
         int id = task.getId();
-        HttpResponse<String> response = HttpTestHelper.sendRequest("tasks/" + ++id);
+        HttpResponse<String> response = HttpTestHelper.sendGetRequest("tasks/" + ++id);
         assertEquals(404, response.statusCode());
     }
 
@@ -81,12 +81,13 @@ class TasksHandlerTest {
     void postHandlerCreateOK() throws IOException, InterruptedException {
         Task task = new Task("Test 2", "Testing task 2", TaskStatus.NEW);
         String taskJson = gson.toJson(task);
-        int httpResult = HttpTestHelper.sendRequest("tasks", taskJson);
-        assertEquals(201, httpResult);
+        HttpResponse<String> response = HttpTestHelper.sendPostRequest("tasks", taskJson);
+        assertEquals(200, response.statusCode());
         List<Task> tasksFromManager = manager.getAllTasks();
         assertNotNull(tasksFromManager);
         assertEquals(1, tasksFromManager.size());
         assertEquals("Test 2", tasksFromManager.get(0).getName());
+        assertEquals(tasksFromManager.get(0).getId(), gson.fromJson(response.body(), int.class));
     }
 
     @Test
@@ -99,7 +100,7 @@ class TasksHandlerTest {
         task2.setDuration(Duration.ofHours(3));
         task2.setStartTime(LocalDateTime.of(2024, 10, 9, 8, 0 ,0));
         String taskJson = gson.toJson(task2);
-        int httpResult = HttpTestHelper.sendRequest("tasks", taskJson);
+        int httpResult = HttpTestHelper.postNgetStatus("tasks", taskJson);
         assertEquals(406, httpResult);
         List<Task> tasksFromManager = manager.getAllTasks();
         assertNotNull(tasksFromManager);
@@ -117,7 +118,7 @@ class TasksHandlerTest {
         taskUpd.setStartTime(time);
         taskUpd.setId(task.getId());
         String taskJson = gson.toJson(taskUpd);
-        int httpResult = HttpTestHelper.sendRequest("tasks", taskJson);
+        int httpResult = HttpTestHelper.postNgetStatus("tasks", taskJson);
         assertEquals(201, httpResult);
         List<Task> tasksFromManager = manager.getAllTasks();
         assertNotNull(tasksFromManager);

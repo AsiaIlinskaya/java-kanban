@@ -48,7 +48,7 @@ class EpicsHandlerTest {
         manager.putEpic(epic1);
         Epic epic2 = new Epic("Test 2", "Testing task 2");
         manager.putEpic(epic2);
-        HttpResponse<String> response = HttpTestHelper.sendRequest("epics/");
+        HttpResponse<String> response = HttpTestHelper.sendGetRequest("epics/");
         assertEquals(200, response.statusCode());
         String jsonEpics = response.body();
         List<Epic> sourceEpics = Arrays.asList(epic1, epic2);
@@ -60,7 +60,7 @@ class EpicsHandlerTest {
     void getHandlerByIdOK() throws IOException, InterruptedException {
         Epic epic1 = new Epic("Test 1", "Testing task 1");
         manager.putEpic(epic1);
-        HttpResponse<String> response = HttpTestHelper.sendRequest("epics/" + epic1.getId());
+        HttpResponse<String> response = HttpTestHelper.sendGetRequest("epics/" + epic1.getId());
         assertEquals(200, response.statusCode());
         String jsonEpic = response.body();
         String sourceJson = gson.toJson(epic1);
@@ -72,7 +72,7 @@ class EpicsHandlerTest {
         Epic epic1 = new Epic("Test 1", "Testing task 1");
         manager.putEpic(epic1);
         int id = epic1.getId();
-        HttpResponse<String> response = HttpTestHelper.sendRequest("tasks/" + ++id);
+        HttpResponse<String> response = HttpTestHelper.sendGetRequest("tasks/" + ++id);
         assertEquals(404, response.statusCode());
     }
 
@@ -84,7 +84,7 @@ class EpicsHandlerTest {
         manager.putSubtask(subtask1);
         Subtask subtask2 = new Subtask("Test 3", "Testing subtask 3", epic.getId(), TaskStatus.DONE);
         manager.putSubtask(subtask2);
-        HttpResponse<String> response = HttpTestHelper.sendRequest("epics/" + epic.getId() + "/subtasks");
+        HttpResponse<String> response = HttpTestHelper.sendGetRequest("epics/" + epic.getId() + "/subtasks");
         assertEquals(200, response.statusCode());
         String jsonSubtasks = response.body();
         List<Subtask> subtasks = Arrays.asList(subtask1, subtask2);
@@ -100,7 +100,7 @@ class EpicsHandlerTest {
         manager.putSubtask(subtask1);
         Subtask subtask2 = new Subtask("Test 3", "Testing subtask 3", epic.getId(), TaskStatus.DONE);
         manager.putSubtask(subtask2);
-        HttpResponse<String> response = HttpTestHelper.sendRequest("epics/" + subtask1.getId() + "/subtasks");
+        HttpResponse<String> response = HttpTestHelper.sendGetRequest("epics/" + subtask1.getId() + "/subtasks");
         assertEquals(404, response.statusCode());
     }
 
@@ -108,12 +108,39 @@ class EpicsHandlerTest {
     void postHandlerCreateOK() throws IOException, InterruptedException {
         Epic epic = new Epic("Test 1", "Testing task 1");
         String asJson = gson.toJson(epic);
-        int httpResult = HttpTestHelper.sendRequest("epics", asJson);
-        assertEquals(201, httpResult);
+        HttpResponse<String> response = HttpTestHelper.sendPostRequest("epics", asJson);
+        assertEquals(200, response.statusCode());
         List<Epic> epicsFromManager = manager.getAllEpics();
         assertNotNull(epicsFromManager);
         assertEquals(1, epicsFromManager.size());
         assertEquals("Test 1", epicsFromManager.get(0).getName());
+        assertEquals(epicsFromManager.get(0).getId(), gson.fromJson(response.body(), int.class));
+    }
+
+    @Test
+    void postHandlerUpdateOK() throws IOException, InterruptedException {
+        Epic epic = new Epic("Test 1", "Testing task 1");
+        manager.putEpic(epic);
+        Epic epic2 = new Epic("Test 2", "Testing task 2");
+        epic2.setId(epic.getId());
+        String asJson = gson.toJson(epic2);
+        int httpResult = HttpTestHelper.postNgetStatus("epics", asJson);
+        assertEquals(201, httpResult);
+        List<Epic> epicsFromManager = manager.getAllEpics();
+        assertNotNull(epicsFromManager);
+        assertEquals(1, epicsFromManager.size());
+        assertEquals("Test 2", epicsFromManager.get(0).getName());
+    }
+
+    @Test
+    void postHandlerUpdateNotFound() throws IOException, InterruptedException {
+        Epic epic = new Epic("Test 1", "Testing task 1");
+        manager.putEpic(epic);
+        Epic epic2 = new Epic("Test 2", "Testing task 2");
+        epic2.setId(epic.getId() + 1);
+        String asJson = gson.toJson(epic2);
+        int httpResult = HttpTestHelper.postNgetStatus("epics", asJson);
+        assertEquals(404, httpResult);
     }
 
     @Test

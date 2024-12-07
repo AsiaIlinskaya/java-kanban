@@ -4,8 +4,9 @@ import com.sun.net.httpserver.HttpExchange;
 import model.Task;
 
 import java.util.List;
+import java.util.function.Consumer;
 
-public class TasksHandler extends BaseHttpHandler {
+public class TasksHandler extends BaseTasksHandler<Task> {
 
     @Override
     protected void getHandler(HttpExchange exchange) {
@@ -27,19 +28,21 @@ public class TasksHandler extends BaseHttpHandler {
         return getManager().getTask(id);
     }
 
-    @Override
-    protected List<? extends Task> getTasksFromManager() {
-        return getManager().getAllTasks();
+    protected Class<? extends Task> getTaskClass() {
+        return Task.class;
+    }
+
+    protected Consumer<Task> getTaskCreator() {
+        return getManager()::putTask;
+    }
+
+    protected Consumer<Task> getTaskUpdater() {
+        return getManager()::updateTask;
     }
 
     @Override
-    protected void sendTasksToManager(String requestBody) {
-        Task task = getGson().fromJson(requestBody, Task.class);
-        if (task.getId() == 0) {
-            getManager().putTask(task);
-        } else {
-            getManager().updateTask(task);
-        }
+    protected List<? extends Task> getTasksFromManager() {
+        return getManager().getAllTasks();
     }
 
     @Override

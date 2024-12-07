@@ -52,7 +52,7 @@ class SubtasksHandlerTest {
         manager.putSubtask(subtask1);
         Subtask subtask2 = new Subtask("Test 3", "Testing subtask 3", epic.getId(), TaskStatus.DONE);
         manager.putSubtask(subtask2);
-        HttpResponse<String> response = HttpTestHelper.sendRequest("subtasks/");
+        HttpResponse<String> response = HttpTestHelper.sendGetRequest("subtasks/");
         assertEquals(200, response.statusCode());
         String jsonSubtasks = response.body();
         List<Subtask> sourceSubtasks = Arrays.asList(subtask1, subtask2);
@@ -66,7 +66,7 @@ class SubtasksHandlerTest {
         manager.putEpic(epic);
         Subtask subtask1 = new Subtask("Test 2", "Testing subtask 2", epic.getId(), TaskStatus.IN_PROGRESS);
         manager.putSubtask(subtask1);
-        HttpResponse<String> response = HttpTestHelper.sendRequest("subtasks/" + subtask1.getId());
+        HttpResponse<String> response = HttpTestHelper.sendGetRequest("subtasks/" + subtask1.getId());
         assertEquals(200, response.statusCode());
         String jsonSubtask = response.body();
         String sourceJson = gson.toJson(subtask1);
@@ -79,7 +79,7 @@ class SubtasksHandlerTest {
         manager.putEpic(epic);
         Subtask subtask1 = new Subtask("Test 2", "Testing subtask 2", epic.getId(), TaskStatus.IN_PROGRESS);
         manager.putSubtask(subtask1);
-        HttpResponse<String> response = HttpTestHelper.sendRequest("subtasks/" + epic.getId());
+        HttpResponse<String> response = HttpTestHelper.sendGetRequest("subtasks/" + epic.getId());
         assertEquals(404, response.statusCode());
     }
 
@@ -89,12 +89,13 @@ class SubtasksHandlerTest {
         manager.putEpic(epic);
         Subtask subtask1 = new Subtask("Test 2", "Testing subtask 2", epic.getId(), TaskStatus.IN_PROGRESS);
         String asJson = gson.toJson(subtask1);
-        int httpResult = HttpTestHelper.sendRequest("subtasks", asJson);
-        assertEquals(201, httpResult);
+        HttpResponse<String> response = HttpTestHelper.sendPostRequest("subtasks", asJson);
+        assertEquals(200, response.statusCode());
         List<Subtask> subtasksFromManager = manager.getAllSubtasks();
         assertNotNull(subtasksFromManager);
         assertEquals(1, subtasksFromManager.size());
         assertEquals("Test 2", subtasksFromManager.get(0).getName());
+        assertEquals(subtasksFromManager.get(0).getId(), gson.fromJson(response.body(), int.class));
     }
 
     @Test
@@ -109,7 +110,7 @@ class SubtasksHandlerTest {
         subtask2.setDuration(Duration.ofHours(8));
         subtask2.setStartTime(LocalDateTime.of(2024, 11,1, 10, 0, 0));
         String asJson = gson.toJson(subtask2);
-        int httpResult = HttpTestHelper.sendRequest("subtasks", asJson);
+        int httpResult = HttpTestHelper.postNgetStatus("subtasks", asJson);
         assertEquals(406, httpResult);
     }
 
@@ -122,7 +123,7 @@ class SubtasksHandlerTest {
         Subtask subtask2 = new Subtask("Test 3", "Testing subtask 3", epic.getId(), TaskStatus.IN_PROGRESS);
         subtask2.setId(subtask1.getId());
         String asJson = gson.toJson(subtask2);
-        int httpResult = HttpTestHelper.sendRequest("subtasks", asJson);
+        int httpResult = HttpTestHelper.postNgetStatus("subtasks", asJson);
         assertEquals(201, httpResult);
         List<Subtask> subtasksFromManager = manager.getAllSubtasks();
         assertNotNull(subtasksFromManager);
@@ -139,7 +140,7 @@ class SubtasksHandlerTest {
         Subtask subtask2 = new Subtask("Test 3", "Testing subtask 3", epic.getId(), TaskStatus.IN_PROGRESS);
         subtask2.setId(epic.getId());
         String asJson = gson.toJson(subtask2);
-        int httpResult = HttpTestHelper.sendRequest("subtasks", asJson);
+        int httpResult = HttpTestHelper.postNgetStatus("subtasks", asJson);
         assertEquals(404, httpResult);
     }
 

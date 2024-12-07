@@ -5,8 +5,9 @@ import model.Subtask;
 import model.Task;
 
 import java.util.List;
+import java.util.function.Consumer;
 
-public class SubtasksHandler extends BaseHttpHandler {
+public class SubtasksHandler extends BaseTasksHandler<Subtask> {
 
     @Override
     protected void getHandler(HttpExchange exchange) {
@@ -34,13 +35,18 @@ public class SubtasksHandler extends BaseHttpHandler {
     }
 
     @Override
-    protected void sendTasksToManager(String requestBody) {
-        Subtask subtask = getGson().fromJson(requestBody, Subtask.class);
-        if (subtask.getId() == 0) {
-            getManager().putSubtask(subtask);
-        } else {
-            getManager().updateSubtask(subtask);
-        }
+    protected Class<? extends Task> getTaskClass() {
+        return Subtask.class;
+    }
+
+    @Override
+    protected Consumer<Subtask> getTaskCreator() {
+        return getManager()::putSubtask;
+    }
+
+    @Override
+    protected Consumer<Subtask> getTaskUpdater() {
+        return getManager()::updateSubtask;
     }
 
     @Override

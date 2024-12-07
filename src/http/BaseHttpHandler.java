@@ -3,7 +3,6 @@ package http;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import model.Task;
 import service.NotFoundException;
 import service.TaskManager;
 import service.TaskValidationException;
@@ -16,7 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class BaseHttpHandler implements HttpHandler {
+public abstract class BaseHttpHandler implements HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) {
@@ -58,43 +57,9 @@ public class BaseHttpHandler implements HttpHandler {
         sendMethodNotAllowed(exchange);
     }
 
-    protected void returnDeleteResult(HttpExchange exchange) {
-        Optional<Integer> id = getId(exchange);
-        doRemove(id.orElseThrow(() -> new ENotAnId("не указан идентификатор")));
-        sendOk(exchange);
-    }
-
-    protected void doRemove(int id) {
-        throw new UnsupportedOperationException();
-    }
-
-    protected void returnTasksByIdOrAll(HttpExchange exchange) {
-        Optional<Integer> id = getId(exchange);
-        Object object  = id.isPresent() ? getTaskFromManager(id.get()) : getTasksFromManager();
-        sendObjectAsJson(exchange, object);
-    }
-
     protected void sendObjectAsJson(HttpExchange exchange, Object obj) {
         String json = getGson().toJson(obj);
         sendOk(exchange, json);
-    }
-
-    protected Task getTaskFromManager(int id) {
-        throw new UnsupportedOperationException();
-    }
-
-    protected List<? extends Task> getTasksFromManager() {
-        throw new UnsupportedOperationException();
-    }
-
-    protected void returnPostResult(HttpExchange exchange) {
-        String requestBody = getRequestBody(exchange);
-        sendTasksToManager(requestBody);
-        sendOk(exchange);
-    }
-
-    protected void sendTasksToManager(String requestBody) {
-        throw new UnsupportedOperationException();
     }
 
     protected void sendResponse(HttpExchange exchange, int code, String body) {

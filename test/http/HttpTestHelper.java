@@ -11,7 +11,7 @@ class HttpTestHelper {
     private static final String SERVER_URL = "http://localhost:8080/";
     private static final HttpClient client = HttpClient.newHttpClient();
 
-    static int sendRequest(String endpoint, String json) throws IOException, InterruptedException {
+    static HttpResponse<String> sendPostRequest(String endpoint, String json) throws IOException, InterruptedException {
         URI url = URI.create(SERVER_URL + endpoint);
         HttpRequest request = HttpRequest
               .newBuilder()
@@ -20,11 +20,14 @@ class HttpTestHelper {
                       .BodyPublishers
                       .ofString(json))
               .build();
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        return response.statusCode();
+        return client.send(request, HttpResponse.BodyHandlers.ofString());
     }
 
-    static HttpResponse<String> sendRequest(String endpoint) throws IOException, InterruptedException {
+    static int postNgetStatus(String endpoint, String json) throws IOException, InterruptedException {
+        return sendPostRequest(endpoint, json).statusCode();
+    }
+
+    static HttpResponse<String> sendGetRequest(String endpoint) throws IOException, InterruptedException {
         URI url = URI.create(SERVER_URL + endpoint);
         HttpRequest request = HttpRequest
                 .newBuilder()

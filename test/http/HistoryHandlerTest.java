@@ -53,7 +53,7 @@ class HistoryHandlerTest {
         manager.getTask(task3.getId());
         manager.getTask(task1.getId());
         String historyJson = gson.toJson(historyManager.getHistory());
-        HttpResponse<String> httpResult = HttpTestHelper.sendRequest("history");
+        HttpResponse<String> httpResult = HttpTestHelper.sendGetRequest("history");
         assertEquals(200, httpResult.statusCode());
         String receivedHistory = httpResult.body();
         assertEquals(historyJson, receivedHistory);

@@ -8,8 +8,9 @@ import service.NotFoundException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
-public class EpicsHandler extends BaseHttpHandler {
+public class EpicsHandler extends BaseTasksHandler<Epic> {
 
     @Override
     protected void getHandler(HttpExchange exchange) {
@@ -46,12 +47,19 @@ public class EpicsHandler extends BaseHttpHandler {
         return getManager().getAllEpics();
     }
 
+    @Override
+    protected Class<? extends Task> getTaskClass() {
+        return Epic.class;
+    }
 
     @Override
-    protected void sendTasksToManager(String requestBody) {
-        Epic epic = getGson().fromJson(requestBody, Epic.class);
-        epic.setId(0);
-        getManager().putEpic(epic);
+    protected Consumer<Epic> getTaskCreator() {
+        return getManager()::putEpic;
+    }
+
+    @Override
+    protected Consumer<Epic> getTaskUpdater() {
+        return getManager()::updateEpic;
     }
 
     @Override
